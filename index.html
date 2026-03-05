@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elayne & Co. — NIC Theory Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f4edea;
+    --warm-white: #fdfaf9;
+    --ink: #2a3438;
+    --muted: #7a8e94;
+    --gold: #c9a86d;
+    --gold-light: #e8d5b0;
+    --gold-pale: #faf5ec;
+    --rose: #c4877e;
+    --rose-light: #f4e6e3;
+    --sage: #5b858d;
+    --sage-light: #cedbdd;
+    --slate: #3c4e57;
+    --border: #cedbdd;
+    --shadow: rgba(60,78,87,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--slate);
+    color: var(--cream);
+    padding: 16px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 3px solid var(--gold);
+  }
+  .logo {
+    font-family: 'Cormorant SC', serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.04em;
+  }
+  .logo span { color: var(--gold); }
+  .header-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid #3A3028;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── HOME ── */
+  #home {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+  .home-hero {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .home-hero h1 {
+    font-family: 'Cormorant SC', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.2;
+    margin-bottom: 12px;
+  }
+  .home-hero h1 em { color: var(--gold); font-style: normal; }
+  .home-hero p {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .module-card {
+    background: var(--warm-white);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .module-card:hover {
+    border-color: var(--gold);
+    box-shadow: 0 6px 24px var(--shadow);
+    transform: translateY(-2px);
+  }
+  .module-card.selected {
+    border-color: var(--gold);
+    background: var(--gold-pale);
+  }
+  .module-card .check {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem;
+    transition: all 0.2s;
+  }
+  .module-card.selected .check {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: white;
+  }
+  .module-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .module-card h3 {
+    font-family: 'Cormorant SC', serif;
+    font-size: 1rem;
+    margin-bottom: 6px;
+  }
+  .module-card p {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .quiz-config {
+    background: var(--warm-white);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+  .quiz-config h3 {
+    font-family: 'Cormorant SC', serif;
+    font-size: 1.1rem;
+    margin-bottom: 18px;
+  }
+  .config-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .config-row:last-child { margin-bottom: 0; }
+  .config-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--muted);
+    width: 100%;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .toggle-btn {
+    padding: 8px 18px;
+    border-radius: 30px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-weight: 500;
+  }
+  .toggle-btn:hover { border-color: var(--gold); }
+  .toggle-btn.active {
+    background: var(--ink);
+    color: white;
+    border-color: var(--ink);
+  }
+
+  .start-btn {
+    display: block;
+    width: 100%;
+    padding: 16px;
+    background: var(--gold);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Cormorant SC', serif;
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .start-btn:hover {
+    background: #b5842e;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(201,150,58,0.35);
+  }
+  .start-btn:disabled {
+    background: var(--border);
+    color: var(--muted);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* ── QUIZ ── */
+  #quiz {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 32px 24px;
+  }
+  .quiz-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    gap: 12px;
+  }
+  .progress-wrap {
+    flex: 1;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-family: 'DM Mono', monospace;
+  }
+  .progress-bar {
+    height: 5px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 10px;
+    transition: width 0.4s ease;
+  }
+  .mode-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .quit-btn {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+    font-family: 'Montserrat', sans-serif;
+  }
+  .quit-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* FLASHCARD */
+  .flashcard-wrap {
+    perspective: 1200px;
+    margin-bottom: 24px;
+  }
+  .flashcard {
+    position: relative;
+    width: 100%;
+    min-height: 320px;
+    transform-style: preserve-3d;
+    transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+  }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .card-face {
+    position: absolute;
+    width: 100%;
+    min-height: 320px;
+    backface-visibility: hidden;
+    border-radius: 18px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .card-front {
+    background: var(--warm-white);
+    border: 2px solid var(--border);
+    box-shadow: 0 8px 40px var(--shadow);
+  }
+  .card-back {
+    background: var(--slate);
+    color: var(--cream);
+    transform: rotateY(180deg);
+    box-shadow: 0 8px 40px rgba(60,78,87,0.25);
+  }
+  .card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .card-front .card-label { color: var(--gold); }
+  .card-back .card-label { color: var(--gold); }
+  .card-question {
+    font-family: 'Cormorant SC', serif;
+    font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+    line-height: 1.45;
+    margin-bottom: 16px;
+  }
+  .card-back .card-question {
+    font-size: 1.05rem;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+  }
+  .card-answer {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--gold);
+    font-family: 'Cormorant SC', serif;
+  }
+  .card-explanation {
+    font-size: 0.88rem;
+    color: #b8c8cc;
+    line-height: 1.65;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 14px;
+  }
+  .tricky-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(201,168,109,0.15);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 0.72rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .flip-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-top: 12px;
+  }
+  .flip-hint .icon { font-size: 1rem; }
+
+  .fc-nav {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 16px;
+  }
+  .nav-btn {
+    padding: 11px 28px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .nav-btn:hover { border-color: var(--gold); }
+  .nav-btn.primary {
+    background: var(--gold);
+    color: white;
+    border-color: var(--gold);
+  }
+  .nav-btn.primary:hover { background: #b5842e; }
+  .nav-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* MULTIPLE CHOICE */
+  .mc-card {
+    background: var(--warm-white);
+    border: 2px solid var(--border);
+    border-radius: 18px;
+    padding: 36px 40px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 40px var(--shadow);
+  }
+  .mc-q {
+    font-family: 'Cormorant SC', serif;
+    font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+    line-height: 1.5;
+    margin-bottom: 28px;
+  }
+  .options-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    width: 100%;
+    text-align: left;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: white;
+    cursor: pointer;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    transition: all 0.15s;
+    color: var(--ink);
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--gold); background: var(--gold-pale); }
+  .option-btn:disabled { cursor: default; }
+  .option-btn.correct { border-color: var(--sage); background: var(--sage-light); }
+  .option-btn.wrong { border-color: var(--rose); background: var(--rose-light); }
+  .option-letter {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 500;
+    min-width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: var(--muted);
+  }
+  .option-btn.correct .option-letter { border-color: var(--sage); color: var(--sage); }
+  .option-btn.wrong .option-letter { border-color: var(--gold); color: var(--gold); }
+
+  .explanation-box {
+    background: var(--slate);
+    color: var(--cream);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    line-height: 1.65;
+    animation: fadeSlide 0.3s ease;
+  }
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .explanation-box .exp-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .explanation-box .exp-result {
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1rem;
+  }
+  .explanation-box .exp-result.right { color: #7EC8A0; }
+  .explanation-box .exp-result.wrong { color: #E89490; }
+
+  /* RESULTS */
+  #results {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 48px 24px;
+    text-align: center;
+  }
+  .score-ring {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 28px;
+    position: relative;
+  }
+  .score-ring svg { transform: rotate(-90deg); }
+  .score-ring .ring-bg { fill: none; stroke: var(--border); stroke-width: 10; }
+  .score-ring .ring-fill {
+    fill: none;
+    stroke: var(--gold);
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1s ease;
+  }
+  .score-text {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .score-pct {
+    font-family: 'Cormorant SC', serif;
+    font-size: 2.6rem;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .score-sub {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+  #results h2 {
+    font-family: 'Cormorant SC', serif;
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  #results p { color: var(--muted); margin-bottom: 28px; }
+  .results-stats {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 36px;
+    flex-wrap: wrap;
+  }
+  .stat-pill {
+    padding: 10px 20px;
+    border-radius: 30px;
+    border: 1.5px solid var(--border);
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+  .stat-pill.green { border-color: var(--sage); color: var(--sage); background: var(--sage-light); }
+  .stat-pill.red { border-color: var(--gold); color: var(--gold); background: var(--rose-light); }
+  .stat-pill.gold { border-color: var(--gold); color: var(--gold); background: var(--gold-pale); }
+  .results-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .action-btn {
+    padding: 13px 28px;
+    border-radius: 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.18s;
+    border: 1.5px solid var(--border);
+    background: white;
+    color: var(--ink);
+  }
+  .action-btn:hover { border-color: var(--gold); }
+  .action-btn.primary {
+    background: var(--gold);
+    color: white;
+    border-color: var(--gold);
+  }
+  .action-btn.primary:hover { background: #b5842e; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 520px) {
+    .card-face { padding: 28px 24px; }
+    .mc-card { padding: 24px 20px; }
+    header { padding: 16px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><img src="data:image/webp;base64,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" alt="Elayne & Co. Nail Academy" style="height:48px;width:auto;display:block;filter:brightness(0) invert(1);"></div>
+  <div class="header-badge">NIC Theory Prep</div>
+</header>
+
+<!-- LOGIN SCREEN -->
+<div id="login" class="screen active">
+  <div style="max-width:480px;margin:0 auto;padding:64px 24px;text-align:center;">
+    <div style="margin-bottom:32px;">
+      <div style="font-family:'Cormorant SC',serif;font-size:0.75rem;letter-spacing:0.2em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;">Welcome to</div>
+      <h1 style="font-family:'Cormorant SC',serif;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.2;margin-bottom:10px;">NIC Theory <em style="color:var(--gold);font-style:normal;">Quiz</em></h1>
+      <p style="color:var(--muted);font-size:0.88rem;">Enter your name to save your progress and track your scores across sessions.</p>
+      <p style="color:var(--muted);font-size:0.78rem;margin-top:8px;background:var(--gold-pale);border:1px solid var(--gold-light);border-radius:8px;padding:8px 12px;">⚠ Spell your name the same way each time to keep your history connected — or tap your name from the list below if you've studied before.</p>
+    </div>
+    <div style="background:var(--warm-white);border:1.5px solid var(--border);border-radius:16px;padding:32px;">
+      <label style="display:block;text-align:left;font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;">Your Name</label>
+      <input id="studentNameInput" type="text" placeholder="e.g. Sarah M." maxlength="40"
+        style="width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:'Montserrat',sans-serif;font-size:1rem;color:var(--ink);background:white;outline:none;margin-bottom:20px;transition:border-color 0.2s;"
+        onfocus="this.style.borderColor='var(--gold)'" onblur="this.style.borderColor='var(--border)'"
+        onkeydown="if(event.key==='Enter')loginStudent()">
+      <button onclick="loginStudent()" style="width:100%;padding:14px;background:var(--gold);color:white;border:none;border-radius:10px;font-family:'Cormorant SC',serif;font-size:1.15rem;cursor:pointer;transition:all 0.2s;letter-spacing:0.04em;"
+        onmouseover="this.style.background='#b5912e'" onmouseout="this.style.background='var(--gold)'">
+        Begin Studying
+      </button>
+    </div>
+    <div id="recentStudents" style="margin-top:20px;"></div>
+  </div>
+</div>
+
+<!-- HOME SCREEN -->
+<div id="home" class="screen">
+  <div class="home-hero">
+    <h1>Master the <em>NIC Theory</em><br>Exam</h1>
+    <p>Interactive flashcards and multiple choice quizzes drawn from your full question bank.</p>
+  </div>
+
+  <div class="modules-grid" id="moduleGrid"></div>
+
+  <div class="quiz-config">
+    <h3>Quiz Settings</h3>
+    <div class="config-row">
+      <div class="config-label">Mode</div>
+      <button class="toggle-btn active" data-mode="flashcard">✦ Flashcards</button>
+      <button class="toggle-btn active" data-mode="multiple">⊞ Multiple Choice</button>
+    </div>
+    <div class="config-row">
+      <div class="config-label">Filter</div>
+      <button class="toggle-btn active" data-filter="all">All Questions</button>
+      <button class="toggle-btn" data-filter="tricky">⚠ Tricky Only</button>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:12px;margin-top:0;">
+    <button class="start-btn" id="startBtn" onclick="startQuiz()" style="flex:1;">Begin Study Session</button>
+    <button onclick="showHistoryScreen()" style="padding:16px 20px;border-radius:12px;border:1.5px solid var(--border);background:white;font-family:'Montserrat',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;color:var(--ink);transition:all 0.2s;white-space:nowrap;"
+      onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">
+      📊 My History
+    </button>
+  </div>
+  <div id="homeWelcome" style="text-align:center;margin-top:16px;font-size:0.82rem;color:var(--muted);"></div>
+</div>
+
+<!-- HISTORY SCREEN -->
+<div id="history" class="screen">
+  <div style="max-width:720px;margin:0 auto;padding:40px 24px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;">Study History</div>
+        <h2 style="font-family:'Cormorant SC',serif;font-size:1.8rem;" id="historyTitle">Your Progress</h2>
+      </div>
+      <button onclick="showScreen('home')" style="padding:9px 20px;border-radius:10px;border:1.5px solid var(--border);background:white;font-family:'Montserrat',sans-serif;font-size:0.85rem;cursor:pointer;font-weight:500;">← Back</button>
+    </div>
+    <div id="historyContent"></div>
+  </div>
+</div>
+
+<!-- QUIZ SCREEN -->
+<div id="quiz" class="screen">
+  <div class="quiz-top">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="progressLabel">Question 1 of 30</span>
+        <span id="scoreLabel">0 correct</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="mode-pill" id="modePill">Flashcard</div>
+    <button class="quit-btn" onclick="goHome()">✕ Quit</button>
+  </div>
+  <div id="questionArea"></div>
+</div>
+
+<!-- RESULTS SCREEN -->
+<div id="results" class="screen">
+  <div class="score-ring">
+    <svg viewBox="0 0 160 160" width="160" height="160">
+      <circle class="ring-bg" cx="80" cy="80" r="70"/>
+      <circle class="ring-fill" id="ringFill" cx="80" cy="80" r="70"
+        stroke-dasharray="439.82"
+        stroke-dashoffset="439.82"/>
+    </svg>
+    <div class="score-text">
+      <div class="score-pct" id="scorePct">0%</div>
+      <div class="score-sub">SCORE</div>
+    </div>
+  </div>
+  <h2 id="resultTitle">Well done!</h2>
+  <p id="resultSub"></p>
+  <div class="results-stats">
+    <div class="stat-pill green" id="statCorrect"></div>
+    <div class="stat-pill red" id="statWrong"></div>
+    <div class="stat-pill gold" id="statTricy"></div>
+  </div>
+  <div class="results-actions">
+    <button class="action-btn" onclick="retryMissed()">Retry Missed</button>
+    <button class="action-btn" onclick="goHome()">← Back to Menu</button>
+    <button class="action-btn primary" onclick="restartSame()">Restart</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════
+//  QUESTION DATA
+// ══════════════════════════════════════════════════
+const ALL_QUESTIONS = [
+  // ── MODULE 2: NAIL ENHANCEMENTS ──
+  { id:1, module:"Module 2", domain:"Nail Tips", tricky:false,
+    q:"When applying a nail tip, the adhesive should be placed:",
+    options:["Across the entire tip well","At the contact point only — the well area of the tip","On the entire natural nail plate","On the free edge of the natural nail only"],
+    answer:1, explanation:"Adhesive goes in the tip's well only. Spreading beyond the contact zone traps air, causes lifting, and weakens the bond." },
+  { id:2, module:"Module 2", domain:"Nail Tips", tricky:true,
+    q:"Before applying a nail tip, the natural nail plate should be:",
+    options:["Buffed to a high shine to help adhesion","Lightly abraded to remove the shine and improve bonding","Soaked in warm water to soften the nail","Cleaned with acetone only — no other preparation needed"],
+    answer:1, explanation:"Shiny nail = oily surface = poor adhesion. You must lightly buff (abrade) to remove the shine. Soaking adds moisture which hurts adhesion." },
+  { id:3, module:"Module 2", domain:"Nail Tips", tricky:false,
+    q:"A nail tip that is too small for the client's nail will most likely cause:",
+    options:["The tip to turn yellow over time","Lifting, popping off, or sidewall stress","The natural nail to become brittle","Faster growth of the natural nail"],
+    answer:1, explanation:"Proper sizing is critical. A tip that doesn't cover the full sidewall-to-sidewall width creates stress points and premature lifting." },
+  { id:4, module:"Module 2", domain:"Nail Tips", tricky:true,
+    q:"After applying a nail tip, the technician should blend the tip's demarcation line using:",
+    options:["A medium-grit file held at a 45-degree angle","A fine-grit buffer held flat and parallel to the nail surface","A coarse file to quickly remove bulk","Acetone applied with a brush to melt the line smooth"],
+    answer:1, explanation:"Blending requires a fine-grit buffer held FLAT — not angled. An angle creates grooves and thins the natural nail. Acetone dissolves tip adhesive — never use it to blend." },
+  { id:5, module:"Module 2", domain:"Nail Tips", tricky:false,
+    q:"The purpose of nail tip adhesive is to:",
+    options:["Disinfect the nail plate prior to tip application","Bond the nail tip to the free edge of the natural nail","Fill in ridges on the natural nail plate","Harden the natural nail before enhancement application"],
+    answer:1, explanation:"Nail tip adhesive (cyanoacrylate-based) creates the temporary bond between tip and natural nail. The overlay product (acrylic, gel, dip) then reinforces and protects." },
+  { id:6, module:"Module 2", domain:"Nail Tips", tricky:true,
+    q:"When removing nail tips, the SAFEST method is to:",
+    options:["Lift the tip off quickly with a metal implement to prevent acetone exposure","File the tip completely off the nail surface","Soak in acetone until the adhesive softens, then gently slide off","Cut the tip as close to the natural nail as possible, then peel"],
+    answer:2, explanation:"Always soak to soften before removal. Forcing, prying, or peeling tears the natural nail plate. File-only removal without soaking also damages the nail surface." },
+  { id:7, module:"Module 2", domain:"Acrylics", tricky:false,
+    q:"The two main components of a traditional acrylic nail system are:",
+    options:["Primer and activator","Monomer liquid and polymer powder","Base coat and top coat resin","Gel and UV photoinitiator"],
+    answer:1, explanation:"Monomer (liquid) + Polymer (powder) = acrylic. They undergo polymerization — a chemical reaction that creates the hard nail enhancement." },
+  { id:8, module:"Module 2", domain:"Acrylics", tricky:false,
+    q:"The correct mix ratio of monomer to polymer in acrylic application produces a bead that is:",
+    options:["Very wet and glossy","Medium consistency — not too wet, not too dry","Very dry and crumbly","Thin and runny for easy spreading"],
+    answer:1, explanation:"Medium consistency bead = proper monomer-to-polymer ratio. Too wet = weak, porous, lifts easily. Too dry = sets before you can shape it, looks rough." },
+  { id:9, module:"Module 2", domain:"Acrylics", tricky:true,
+    q:"During acrylic application, a client complains of a burning or heat sensation under the enhancement. This is MOST likely caused by:",
+    options:["An allergic reaction to the polymer powder","Applying the acrylic too thickly, creating excessive exothermic heat","The UV lamp activating the product","Using the wrong brush size"],
+    answer:1, explanation:"Acrylic polymerization is exothermic (releases heat). Thick application = more chemical reaction = more heat. Safety response: thin out the product immediately or remove." },
+  { id:10, module:"Module 2", domain:"Acrylics", tricky:false,
+    q:"After acrylic application is complete, the enhancement should be shaped and refined using:",
+    options:["A very coarse file (60-80 grit)","A medium file (150-180 grit)","Acetone to dissolve high spots","A buffer block only"],
+    answer:1, explanation:"150-180 grit is the standard working file for shaping cured acrylics. Coarser damages the product surface; acetone dissolves rather than shapes." },
+  { id:11, module:"Module 2", domain:"Acrylics", tricky:true,
+    q:"Green discoloration appearing between the natural nail and an acrylic enhancement is MOST likely:",
+    options:["A fungal infection requiring antifungal treatment","Pseudomonas bacterial growth in moisture trapped by lifting","A normal reaction between the monomer and nail pigment","Oxidation of the acrylic polymer over time"],
+    answer:1, explanation:"Green nail = pseudomonas bacteria (NOT fungus). Bacteria thrive in the gap created by a lifting enhancement. Remove the enhancement, do not apply over it." },
+  { id:12, module:"Module 2", domain:"Acrylics", tricky:false,
+    q:"Acrylic nail products should be kept away from open flames because monomer liquid is:",
+    options:["Corrosive","Flammable","Carcinogenic","Reactive with oxygen"],
+    answer:1, explanation:"Monomer is highly flammable. Storage and use near any heat source, pilot light, or open flame is a serious fire safety hazard." },
+  { id:13, module:"Module 2", domain:"Acrylics", tricky:true,
+    q:"When filling acrylic nails, product should be applied in the area of new growth primarily to:",
+    options:["Cover the entire nail surface for a uniform look","Prevent lifting and maintain the structural integrity of the arch","Build maximum thickness over the natural nail","Blend color between old and new product"],
+    answer:1, explanation:"Fill targets new growth at the base to restore the apex (arch) and balance. Filing/shaping the existing product and maintaining the stress point is the structural goal — not just coverage." },
+  { id:14, module:"Module 2", domain:"Acrylics", tricky:false,
+    q:"Acrylic nail products should be dispensed using:",
+    options:["Any clean container that is available","A dappen dish with a secure lid between uses","A paper towel for easy disposal","The original manufacturer container only"],
+    answer:1, explanation:"A dappen dish is the correct dispensing vessel for monomer. It limits evaporation, controls contamination, and keeps monomer covered between uses." },
+  { id:15, module:"Module 2", domain:"Light-Cured Gels", tricky:false,
+    q:"The component in gel nail products that initiates the hardening process when exposed to UV or LED light is called a:",
+    options:["Monomer","Photoinitiator","Catalyst","Polymer"],
+    answer:1, explanation:"Photoinitiators absorb light energy and trigger the polymerization of the gel. Without them, gel products would never harden under any light source." },
+  { id:16, module:"Module 2", domain:"Light-Cured Gels", tricky:true,
+    q:"A client's gel enhancement is lifting at the cuticle area after only one week. The MOST likely cause is:",
+    options:["The UV lamp is too powerful","Gel was applied onto the cuticle or skin, not just the nail plate","The client is washing hands too frequently","Gel product was undercured"],
+    answer:1, explanation:"Gel touching skin is the #1 cause of early lifting. Gel bonds to nail plate — it cannot bond to skin. Even microscopic contact with the cuticle = lift. Application prep and technique is always the first suspect." },
+  { id:17, module:"Module 2", domain:"Light-Cured Gels", tricky:false,
+    q:"The sticky layer that remains on the surface of gel nails after curing is called the:",
+    options:["Inhibition layer","Photoinitiator residue","Primer coat","Base gel layer"],
+    answer:0, explanation:"The inhibition layer (also called the tacky or dispersion layer) forms because oxygen interferes with complete surface curing. It is wiped off with a lint-free wipe and cleanser after the final cure." },
+  { id:18, module:"Module 2", domain:"Light-Cured Gels", tricky:true,
+    q:"Which of the following is TRUE regarding UV lamps used for gel curing?",
+    options:["LED lamps cure all gel products; UV lamps are obsolete","UV lamps cure all gel products; LED lamps only cure LED-specific gels","Both UV and LED lamps cure all gel products equally","The wattage of the lamp does not affect cure time"],
+    answer:1, explanation:"UV lamps emit a broad spectrum and can cure most gels. LED lamps emit narrow-spectrum light — they cure only gels formulated for LED. Always match product to lamp type." },
+  { id:19, module:"Module 2", domain:"Light-Cured Gels", tricky:false,
+    q:"To remove gel nail enhancements safely, the technician should:",
+    options:["File the entire enhancement completely off the natural nail","Soak cotton in acetone, wrap nails in foil, and allow adequate soak time","Peel the gel off gently starting from the cuticle edge","Use a metal implement to lift the gel off the nail plate"],
+    answer:1, explanation:"Wrap-and-soak is the safe removal method. Filing off completely or forcing removal both cause significant natural nail damage." },
+  { id:20, module:"Module 2", domain:"Light-Cured Gels", tricky:true,
+    q:"If a gel enhancement appears cloudy or has a gummy texture after curing, this indicates:",
+    options:["The gel color is too dark and needs a lighter shade","The product is undercured due to insufficient lamp exposure time","The inhibition layer was not properly removed","Too many layers of gel were applied"],
+    answer:1, explanation:"Cloudiness + gummy texture = undercured gel. This is a safety concern — uncured gel contains unpolymerized chemicals that can cause skin sensitization. Always cure for the full manufacturer-recommended time." },
+  { id:21, module:"Module 2", domain:"Powder Dip", tricky:false,
+    q:"In a powder dip (SNS) nail system, the bonding agent that adheres the powder to the nail is:",
+    options:["Monomer liquid","Cyanoacrylate-based resin (similar to nail glue)","UV gel base coat","Acrylic primer"],
+    answer:1, explanation:"Dip systems use cyanoacrylate resin — the same chemistry as nail tip adhesive/nail glue — to bond each layer of dip powder. No UV lamp is needed." },
+  { id:22, module:"Module 2", domain:"Powder Dip", tricky:true,
+    q:"The MOST significant sanitation concern with powder dip systems in a salon setting is:",
+    options:["The activator chemical is highly flammable","Dipping fingers directly into a shared powder jar spreads contamination between clients","The resin dries too quickly to allow proper disinfection","Powder dip products cannot be used on natural nails"],
+    answer:1, explanation:"Dipping a client's fingers directly into a communal jar is a major cross-contamination risk. Best practice is to pour powder onto a clean surface or use a dedicated client pour. Many states now require this." },
+  { id:23, module:"Module 2", domain:"Powder Dip", tricky:false,
+    q:"After applying all dip layers, the activator (top activator) is applied to:",
+    options:["Each layer of powder before the next layer","Only the base coat layer","The final powder layer to harden and seal the enhancement","The natural nail before any product is applied"],
+    answer:2, explanation:"The activator is applied to the final layer to fully harden the enhancement and prepare the surface for filing and finishing. Some systems use activator between layers too — know your product's protocol." },
+  { id:24, module:"Module 2", domain:"Powder Dip", tricky:true,
+    q:"How should powder dip nail enhancements be removed?",
+    options:["File aggressively until all product is gone","Soak in acetone until product softens, then gently push off","Peel off carefully from the free edge back toward the cuticle","Use an e-file only — acetone damages dip products"],
+    answer:1, explanation:"Same rule as acrylics — soak in acetone to soften, then gently remove. Forcing, peeling, or filing entirely through causes significant natural nail damage. Safety = patience." },
+  { id:25, module:"Module 2", domain:"Powder Dip", tricky:false,
+    q:"Compared to traditional acrylics, powder dip systems are often preferred because they:",
+    options:["Are stronger and longer-lasting than acrylics","Require no UV or LED lamp to cure","Contain no chemicals that could cause sensitivity","Can be applied without any nail preparation"],
+    answer:1, explanation:"No lamp needed is the key practical difference. Dip systems cure through a chemical reaction between the resin and activator — making them faster for some technicians and accessible without lamp equipment." },
+  { id:26, module:"Module 2", domain:"All Enhancement Types", tricky:true,
+    q:"A client wants to know which nail enhancement system is BEST for her. The technician should FIRST:",
+    options:["Recommend acrylics because they are the strongest system","Recommend gel because it is the safest for natural nails","Assess the client's nail condition, lifestyle, and desired outcome before recommending","Ask what her previous technician used"],
+    answer:2, explanation:"NIC tests client consultation and critical thinking, not product loyalty. No system is universally 'best' — the correct answer is always: assess the individual client first." },
+  { id:27, module:"Module 2", domain:"All Enhancement Types", tricky:false,
+    q:"Which of the following is a contraindication for ALL nail enhancement services?",
+    options:["Short natural nails","Active nail or skin infection in the service area","Slightly dry cuticles","A previous history of nail enhancements"],
+    answer:1, explanation:"Active infection = always refuse for any enhancement service. Safety-first rule: you never apply product over infected tissue, regardless of the system." },
+  { id:28, module:"Module 2", domain:"All Enhancement Types", tricky:true,
+    q:"When filing nail enhancements, the file should be moved in which direction?",
+    options:["In a back-and-forth sawing motion for speed","In one direction only, from sidewall to center, to prevent cracking","In a circular motion for even surface coverage","In any direction — the motion does not affect the enhancement"],
+    answer:1, explanation:"One directional filing from sidewall to center prevents stress fractures in the enhancement material, especially at the thinner sidewall areas. Back-and-forth sawing creates heat and structural stress." },
+  { id:29, module:"Module 2", domain:"All Enhancement Types", tricky:false,
+    q:"Proper dust mask usage during nail enhancement filing is important to protect the technician from:",
+    options:["Chemical vapors from monomer","Inhalation of fine nail dust particles","UV light exposure during curing","Electrical hazards from the e-file"],
+    answer:1, explanation:"Dust masks protect against particulate matter (nail dust). For chemical vapors, you need a properly rated respirator — a dust mask alone does not filter chemical vapors." },
+  { id:30, module:"Module 2", domain:"All Enhancement Types", tricky:true,
+    q:"A client's enhancement product begins to lift within days of application. After ruling out application technique errors, the NEXT most likely cause is:",
+    options:["The client is using hand lotion too frequently","Improper nail preparation — oils or moisture left on the nail plate","The product brand is inferior quality","The client's nails are growing too fast"],
+    answer:1, explanation:"Lifting hierarchy is: prep first, then technique, then product. Oily or moist nail surfaces are the most common cause of premature lifting across ALL enhancement systems. Thorough dehydration and priming is the fix." },
+
+  // ── MODULE 3: MANI & PEDI ──
+  { id:31, module:"Module 3", domain:"Procedure Order", tricky:false,
+    q:"What is the FIRST step when beginning a basic manicure service?",
+    options:["Shape the nails with a file","Apply cuticle remover","Remove old nail polish","Soak the fingertips in warm water"],
+    answer:2, explanation:"Remove old polish FIRST — always. You cannot assess the nail's condition or shape properly until the old product is off." },
+  { id:32, module:"Module 3", domain:"Procedure Order", tricky:true,
+    q:"During a basic manicure, when should the nail technician push back the cuticles?",
+    options:["Before soaking, while the cuticle is dry and firm","Immediately after soaking, while the cuticle is soft and pliable","After applying base coat, to clean up the edges","At the very end of the service"],
+    answer:1, explanation:"Cuticle work happens AFTER soaking because warm water softens the cuticle, making it safe to push back without tearing. Dry cuticle pushing causes injury and is a NIC safety flag." },
+  { id:33, module:"Module 3", domain:"Procedure Order", tricky:false,
+    q:"In the correct manicure sequence, nail polish application occurs:",
+    options:["Before the hand massage","After soaking but before filing","After the hand massage and before top coat","Before base coat is applied"],
+    answer:2, explanation:"Correct NIC order for polish: Hand massage → Base coat → Polish color → Top coat. Massage after polish would disturb the finish and transfer oils to the nails." },
+  { id:34, module:"Module 3", domain:"Procedure Order", tricky:true,
+    q:"After completing a pedicure service, the client's feet should be dried:",
+    options:["With a shared towel that is laundered weekly","With a fresh, clean towel and carefully between each toe","With a blow dryer set to high heat for speed","With the same towel used to dry their hands"],
+    answer:1, explanation:"Between the toes is the critical detail — moisture between toes creates an environment for fungal and bacterial growth (athlete's foot). This is a hygiene and safety answer, not just etiquette." },
+  { id:35, module:"Module 3", domain:"Procedure Order", tricky:false,
+    q:"The correct order for applying nail polish is:",
+    options:["Color → Base coat → Top coat","Top coat → Color → Base coat","Base coat → Color → Top coat","Color → Top coat → Base coat"],
+    answer:2, explanation:"Base coat → Color → Top coat. Every time. Base coat protects the nail and improves adhesion. Top coat seals and adds shine. This is a guaranteed NIC question." },
+  { id:36, module:"Module 3", domain:"Massage Techniques", tricky:false,
+    q:"The massage movement that uses a light, gliding, stroking motion to begin and end a massage is called:",
+    options:["Petrissage","Tapotement","Effleurage","Friction"],
+    answer:2, explanation:"Effleurage = light gliding strokes. Used to open and close the massage and transition between movements. Think 'effleurer' (French: to skim or touch lightly)." },
+  { id:37, module:"Module 3", domain:"Massage Techniques", tricky:true,
+    q:"The massage movement that involves kneading, lifting, and squeezing the muscle tissue is:",
+    options:["Effleurage","Petrissage","Tapotement","Friction"],
+    answer:1, explanation:"Petrissage = kneading. Students confuse petrissage and effleurage. Memory trick: Petrissage = 'press and squeeze' (think 'petrir' — French for 'to knead dough')." },
+  { id:38, module:"Module 3", domain:"Massage Techniques", tricky:false,
+    q:"Tapotement is a massage technique characterized by:",
+    options:["Long, flowing gliding strokes","Deep circular pressure on muscle tissue","Light tapping or percussion movements","Firm rubbing with the thumb in small circles"],
+    answer:2, explanation:"Tapotement = tapping/percussion. It stimulates circulation. Think of a piano player's light fingertip tapping motion. 'Taper' in French means to tap." },
+  { id:39, module:"Module 3", domain:"Massage Techniques", tricky:true,
+    q:"Which massage movement uses deep, circular or cross-fiber rubbing to generate warmth and stimulate circulation in deeper tissue?",
+    options:["Effleurage","Petrissage","Tapotement","Friction"],
+    answer:3, explanation:"Friction = deep rubbing to generate heat in tissue. Students often confuse friction with petrissage. Key difference: friction is rubbing-to-heat, petrissage is kneading-to-lift." },
+  { id:40, module:"Module 3", domain:"Massage Techniques", tricky:false,
+    q:"What is the PRIMARY benefit of including a hand massage in a manicure service?",
+    options:["It softens the cuticles before pushing them back","It stimulates circulation and relaxes the muscles","It removes dead skin cells from the palms","It helps nail polish adhere better to the nail plate"],
+    answer:1, explanation:"Massage stimulates blood circulation and relaxes muscle tension. This is both a therapeutic benefit for the client and a service differentiator." },
+  { id:41, module:"Module 3", domain:"Massage Techniques", tricky:true,
+    q:"In what ORDER should the four basic massage movements be performed for maximum effectiveness?",
+    options:["Tapotement → Friction → Petrissage → Effleurage","Effleurage → Petrissage → Friction → Tapotement → Effleurage","Petrissage → Effleurage → Tapotement → Friction","Friction → Tapotement → Effleurage → Petrissage"],
+    answer:1, explanation:"The NIC sequence starts and ends with effleurage. Effleurage warms the tissue and opens/closes the massage. The working movements (petrissage, friction, tapotement) happen in the middle." },
+  { id:42, module:"Module 3", domain:"Add-On Services", tricky:false,
+    q:"Paraffin wax treatments are recommended primarily for clients with:",
+    options:["Nail fungal infections","Dry, rough skin and sore joints","Very thin, fragile nail plates","Oily skin and excessive perspiration"],
+    answer:1, explanation:"Paraffin's warmth and occlusive properties soften dry skin and provide temporary relief for achy joints. It is a moisturizing and therapeutic add-on." },
+  { id:43, module:"Module 3", domain:"Add-On Services", tricky:true,
+    q:"Before performing a paraffin wax treatment, the technician should confirm the client does NOT have:",
+    options:["Dry or cracked skin on the hands","Open wounds, skin infections, or circulatory conditions such as diabetes","Naturally oily skin","A preference for unscented products"],
+    answer:1, explanation:"Paraffin is CONTRAINDICATED for open wounds, infections, or circulatory issues (like diabetes or poor circulation) because heat can cause burns or worsen the condition. Always screen before applying heat." },
+  { id:44, module:"Module 3", domain:"Add-On Services", tricky:false,
+    q:"Gel polish differs from regular nail polish primarily because it:",
+    options:["Contains more pigment for richer color","Must be cured under a UV or LED lamp to harden","Lasts only 3–5 days before chipping","Is removed with regular polish remover"],
+    answer:1, explanation:"Gel polish requires UV/LED curing to polymerize and harden — that is what gives it 2–3 week wear. Regular polish air-dries and is removed with acetone-based remover." },
+  { id:45, module:"Module 3", domain:"Add-On Services", tricky:true,
+    q:"The purpose of applying a mask or essential oil treatment to the hands or feet during a service is to:",
+    options:["Replace the need for a hand massage","Provide targeted skin conditioning, hydration, or therapeutic benefit","Disinfect the skin before nail work begins","Prevent nail polish from staining"],
+    answer:1, explanation:"Masks and essential oil treatments are conditioning and therapeutic — not disinfection. Students sometimes confuse these with sanitation steps. They are add-on skin care, not infection control." },
+  { id:46, module:"Module 3", domain:"Add-On Services", tricky:false,
+    q:"A thermal add-on service (warm towels or heated stones) is used to:",
+    options:["Disinfect implements during the service","Open pores, soften tissue, and enhance product penetration","Cure gel polish more evenly","Remove excess nail product from the skin"],
+    answer:1, explanation:"Heat opens pores and softens skin tissue, allowing creams, oils, and treatments to penetrate more effectively. It also provides deep relaxation and increases circulation." },
+  { id:47, module:"Module 3", domain:"Nail Shaping & Filing", tricky:false,
+    q:"To prevent ingrown toenails during a pedicure, toenails should be cut or filed:",
+    options:["In a curved shape following the natural curve of the toe tip","Straight across with slightly rounded corners","As short as possible to delay regrowth","At a sharp angle on each side to reduce pressure"],
+    answer:1, explanation:"Straight across with slightly rounded corners is the NIC-correct answer for toenails. Curved or angled cutting drives the nail edge into the skin, causing ingrown nails." },
+  { id:48, module:"Module 3", domain:"Nail Shaping & Filing", tricky:true,
+    q:"When filing natural nails, the file should be moved in which direction?",
+    options:["Back and forth in a sawing motion for efficiency","In one direction only, from corner to center on each side","In circular motions to maintain even pressure","Any direction is acceptable as long as pressure is consistent"],
+    answer:1, explanation:"One direction — corner to center — on each side. Back-and-forth sawing creates heat, frays the nail edge, and causes splitting. The NIC rewards technique that protects the nail." },
+  { id:49, module:"Module 3", domain:"Nail Shaping & Filing", tricky:false,
+    q:"Which nail shape is recommended for clients whose nails break easily due to their occupation or lifestyle?",
+    options:["Long stiletto","Square with sharp corners","Short, rounded or squoval","Long oval"],
+    answer:2, explanation:"Short, rounded or squoval shapes have the least surface area to catch and break. Safety and practicality guide nail shape recommendations for active clients." },
+  { id:50, module:"Module 3", domain:"Pedicure Procedures", tricky:false,
+    q:"Callus softeners used during pedicure services work by:",
+    options:["Physically scrubbing dead skin cells away","Chemically softening thickened keratin so it can be easily removed","Disinfecting the skin to prevent infection","Temporarily numbing the foot to reduce sensitivity"],
+    answer:1, explanation:"Callus softeners contain keratolytic agents (often urea or alpha hydroxy acids) that chemically break down the thickened keratin layer. The pumice or foot file then removes it mechanically." },
+  { id:51, module:"Module 3", domain:"Pedicure Procedures", tricky:true,
+    q:"A nail technician notices a client has thick, yellowed, crumbling toenails during a pedicure consultation. The CORRECT action is to:",
+    options:["Apply extra cuticle oil and proceed with the service","File the nails thinner to improve their appearance","Refuse the service and refer the client to a physician","Soak in antifungal solution before proceeding"],
+    answer:2, explanation:"Thick, yellowed, crumbling toenails are classic onychomycosis (fungal infection) signs. Refuse service and refer. Antifungal soaks are NOT within a nail tech's scope of practice." },
+  { id:52, module:"Module 3", domain:"Pedicure Procedures", tricky:false,
+    q:"Pedicure basin jets and pipes must be disinfected after each client because:",
+    options:["Polish residue clogs the jets over time","Bacteria and biofilm can accumulate in the piping system","The warm water changes the pH of the disinfectant","State law only requires weekly cleaning of foot basins"],
+    answer:1, explanation:"Biofilm — a layer of bacteria — forms in jet pipes and basins. This has caused serious client infections from contaminated pedicure basins. After every client, documented, is the standard." },
+  { id:53, module:"Module 3", domain:"Pedicure Procedures", tricky:true,
+    q:"During a pedicure, the technician notices the client has a small open blister on their heel. The technician should:",
+    options:["Apply antiseptic and cover it with a bandage before proceeding","Avoid the area carefully and complete the rest of the service","Stop the service and refer the client to a physician","Continue — small blisters are not a contraindication"],
+    answer:2, explanation:"An open wound with broken skin = stop and refer. This is not just avoidance — broken skin is an entry point for infection and a bloodborne pathogen exposure risk. Safety always means stop." },
+  { id:54, module:"Module 3", domain:"Polish Application", tricky:false,
+    q:"The purpose of applying a base coat before nail polish is to:",
+    options:["Add extra shine to the finished nail","Protect the nail plate from staining and improve polish adhesion","Dry the polish more quickly","Make the color appear more vibrant"],
+    answer:1, explanation:"Base coat = protection + adhesion. It creates a barrier between the pigmented polish and the nail plate (preventing staining) and gives the color coat a gripping surface." },
+  { id:55, module:"Module 3", domain:"Polish Application", tricky:true,
+    q:"The correct method for mixing nail polish before application is to:",
+    options:["Shake the bottle vigorously to combine the pigments","Roll the bottle between the palms to blend without creating bubbles","Stir with the brush applicator inside the bottle","Add a few drops of polish thinner and shake"],
+    answer:1, explanation:"Roll the bottle — never shake. Shaking creates air bubbles that cause bumpy, uneven polish application. This is a classic NIC question students get wrong because 'shaking a bottle' feels intuitive." },
+  { id:56, module:"Module 3", domain:"Polish Application", tricky:false,
+    q:"When applying nail polish, the brush stroke should begin:",
+    options:["At the free edge, working toward the cuticle","At the cuticle area, with a small gap, then stroke toward the free edge","From sidewall to sidewall across the middle of the nail","In whatever pattern covers the nail fastest"],
+    answer:1, explanation:"Start at the cuticle (leaving a tiny gap to avoid skin contact), then stroke to the free edge. This is the NIC-approved technique for smooth, even coverage without flooding the cuticle." },
+  { id:57, module:"Module 3", domain:"Polish Application", tricky:true,
+    q:"A client's nail polish is bubbling after application. The MOST likely cause is:",
+    options:["The base coat was not applied properly","The polish was shaken before application or applied in thick coats","The top coat was applied before the color coat was fully dry","The client's natural nails have too much moisture"],
+    answer:1, explanation:"Bubbling = shaking (air bubbles) or thick coats (trapped solvents). Both are application technique errors. Top coat over wet color causes wrinkling, not bubbling." },
+
+  // ── MASTER BANK: INFECTION CONTROL & SAFETY ──
+  { id:58, module:"Master Bank", domain:"Infection Control & Safety", tricky:false,
+    q:"After each client, manicuring implements that have contacted the client MUST be:",
+    options:["Wiped with a clean towel","Rinsed with hot water","Cleansed and properly disinfected","Stored in a dry drawer"],
+    answer:2, explanation:"Safety-first principle: proper disinfection prevents disease transmission. Wiping alone is never sufficient." },
+  { id:59, module:"Master Bank", domain:"Infection Control & Safety", tricky:true,
+    q:"A client arrives with what appears to be a nail fungal infection. The BEST course of action is to:",
+    options:["Apply antifungal treatment before the service","Perform the service using gloves for protection","Refuse the service and refer the client to a physician","File the affected nail smooth and proceed"],
+    answer:2, explanation:"When in doubt, choose safety. Nail techs do NOT treat infections — ever. Refer out. Gloves do not make an infected service acceptable." },
+  { id:60, module:"Master Bank", domain:"Infection Control & Safety", tricky:false,
+    q:"The three levels of infection control from lowest to highest effectiveness are:",
+    options:["Disinfection, sterilization, sanitation","Sanitation, disinfection, sterilization","Sterilization, sanitation, disinfection","Sanitation, sterilization, disinfection"],
+    answer:1, explanation:"Memorize this order: Sanitation (reduce) → Disinfection (destroy most pathogens) → Sterilization (destroy ALL, including spores)." },
+  { id:61, module:"Master Bank", domain:"Infection Control & Safety", tricky:false,
+    q:"What government agency regulates the sale and use of disinfectants used in nail salons?",
+    options:["FDA","OSHA","EPA","CDC"],
+    answer:2, explanation:"The EPA (Environmental Protection Agency) registers and regulates all disinfectants. OSHA covers workplace safety, FDA covers cosmetics and drugs." },
+  { id:62, module:"Master Bank", domain:"Infection Control & Safety", tricky:true,
+    q:"A nail technician accidentally nicks a client's skin during a service and it begins to bleed. The FIRST action the technician should take is:",
+    options:["Apply styptic powder immediately to stop the bleeding","Put on gloves and stop the service","Wipe the cut with a clean tissue","Continue the service"],
+    answer:1, explanation:"The FIRST step is always to protect yourself — put on gloves. This follows blood exposure protocol. Styptic powder comes after you have protected yourself." },
+  { id:63, module:"Master Bank", domain:"Infection Control & Safety", tricky:false,
+    q:"Single-use items such as files, buffers, and orangewood sticks that contact a client must be:",
+    options:["Disinfected and reused on the same client only","Disinfected between clients","Discarded after each client","Stored in a sealed bag for next use"],
+    answer:2, explanation:"Single-use = one use only. These items are porous and cannot be properly disinfected. Discard after each client, every time." },
+  { id:64, module:"Master Bank", domain:"Infection Control & Safety", tricky:false,
+    q:"SDS (Safety Data Sheets) must be available in the salon primarily to:",
+    options:["Track inventory of professional products","Provide first aid and hazard information for chemicals used","Satisfy state licensing requirements for recordkeeping","Show clients what ingredients are in the products"],
+    answer:1, explanation:"SDS sheets exist for worker safety — they detail chemical hazards, first aid, handling, and emergency procedures. This is an OSHA requirement." },
+  { id:65, module:"Master Bank", domain:"Infection Control & Safety", tricky:true,
+    q:"Which of the following BEST prevents the spread of disease in the salon?",
+    options:["Wearing gloves during all services","Washing hands before and after every client","Using EPA-registered disinfectants on all implements","All of the above"],
+    answer:3, explanation:"NIC sometimes uses 'All of the above' correctly. All three practices together form comprehensive infection control — no single action is sufficient alone." },
+  { id:66, module:"Master Bank", domain:"Infection Control & Safety", tricky:false,
+    q:"Proper ventilation in the nail salon is MOST important for preventing:",
+    options:["Client allergic reactions to polish color","Technician overexposure to chemical vapors","Polish from drying too quickly","Static electricity near UV lamps"],
+    answer:1, explanation:"Ventilation protects the technician from chronic chemical overexposure — a serious long-term occupational health risk. Safety = protect the worker." },
+  { id:67, module:"Master Bank", domain:"Infection Control & Safety", tricky:false,
+    q:"Foot spas and pedicure basins must be disinfected:",
+    options:["Only when visibly soiled","Once daily at end of service day","After each client and documented in a log","Weekly with hospital-grade disinfectant"],
+    answer:2, explanation:"After EVERY client — this is non-negotiable. Most states also require a written log of disinfection times to prove compliance." },
+
+  // ── MASTER BANK: ANATOMY & PHYSIOLOGY ──
+  { id:68, module:"Master Bank", domain:"Anatomy & Physiology", tricky:false,
+    q:"The actively growing part of the nail that produces all nail cells is the:",
+    options:["Lunula","Matrix","Nail bed","Hyponychium"],
+    answer:1, explanation:"The MATRIX is the nail factory. Damage to the matrix = permanent nail damage. Everything grows from here." },
+  { id:69, module:"Master Bank", domain:"Anatomy & Physiology", tricky:true,
+    q:"The white half-moon visible at the base of some nails is called the lunula. It is white because:",
+    options:["It contains a higher concentration of keratin","It is the visible portion of the nail matrix","It lacks blood vessels entirely","It is where the cuticle and nail plate meet"],
+    answer:1, explanation:"The lunula IS the visible portion of the matrix showing through the nail plate. Its white color is because matrix cells here are not yet fully keratinized." },
+  { id:70, module:"Master Bank", domain:"Anatomy & Physiology", tricky:false,
+    q:"The nail plate is primarily composed of:",
+    options:["Collagen","Keratin","Melanin","Elastin"],
+    answer:1, explanation:"Keratin — the same protein that makes up hair and skin. Nails are hardened, compacted keratin." },
+  { id:71, module:"Master Bank", domain:"Anatomy & Physiology", tricky:false,
+    q:"Nerves and blood vessels that nourish the nail are found in the nail:",
+    options:["Plate","Wall","Bed","Grooves"],
+    answer:2, explanation:"The nail BED contains the blood supply and nerves. This is why nail bed injuries bleed and hurt — it is living tissue." },
+  { id:72, module:"Master Bank", domain:"Anatomy & Physiology", tricky:true,
+    q:"The structure that seals the space between the nail plate and the fingertip at the free edge is the:",
+    options:["Eponychium","Hyponychium","Perionychium","Pterygium"],
+    answer:1, explanation:"Hyponychium seals at the FREE EDGE/fingertip. Eponychium seals at the base/cuticle area. Many students confuse these." },
+  { id:73, module:"Master Bank", domain:"Anatomy & Physiology", tricky:false,
+    q:"The skin around the nail that overlaps the nail plate on the sides is called the:",
+    options:["Nail wall / lateral nail fold","Cuticle","Mantle","Perionychium"],
+    answer:0, explanation:"The lateral nail folds (nail walls) protect the sides of the nail plate. Perionychium refers to all the skin surrounding the nail collectively." },
+  { id:74, module:"Master Bank", domain:"Anatomy & Physiology", tricky:false,
+    q:"A condition in which the nail plate separates from the nail bed is called:",
+    options:["Onychomycosis","Onycholysis","Onychorrhexis","Onychauxis"],
+    answer:1, explanation:"Onycholysis: lysis = separation/breaking down. The nail lifts from the bed." },
+  { id:75, module:"Master Bank", domain:"Anatomy & Physiology", tricky:true,
+    q:"Brittle nails with lengthwise ridges is characteristic of which condition?",
+    options:["Beau's Lines","Onychorrhexis","Leukonychia","Onychatrophia"],
+    answer:1, explanation:"Onychorrhexis = lengthwise ridges + brittle. Beau's Lines are HORIZONTAL ridges caused by illness/trauma. Direction is the key differentiator." },
+  { id:76, module:"Master Bank", domain:"Anatomy & Physiology", tricky:false,
+    q:"White spots that appear on the nail plate are a condition called:",
+    options:["Leukonychia","Leucoderma","Onychomycosis","Pterygium"],
+    answer:0, explanation:"Leukonychia: leuko = white, onych = nail. These white spots are usually caused by minor trauma to the nail matrix." },
+  { id:77, module:"Master Bank", domain:"Anatomy & Physiology", tricky:true,
+    q:"A nail technician should REFUSE service on a client showing signs of:",
+    options:["Onychorrhexis (brittle nails)","Onycholysis (nail separation)","Onychomycosis (nail fungal infection)","Leukonychia (white spots)"],
+    answer:2, explanation:"Safety-first rule. Fungal infections (onychomycosis) are contagious — refuse and refer. The other three conditions can receive nail services." },
+  { id:78, module:"Master Bank", domain:"Anatomy & Physiology", tricky:false,
+    q:"The bone that forms the heel of the foot is the:",
+    options:["Talus","Calcaneus","Tibia","Fibula"],
+    answer:1, explanation:"Calcaneus = heel bone. Talus = ankle bone. For pedicure services, knowing foot anatomy helps identify pressure points." },
+
+  // ── MASTER BANK: CHEMISTRY ──
+  { id:79, module:"Master Bank", domain:"Chemistry of Nail Products", tricky:false,
+    q:"The main ingredient in acrylic (liquid and powder) nail systems is:",
+    options:["Methacrylate monomers and polymers","Cyanoacrylate","Ethyl acetate","Benzoyl peroxide"],
+    answer:0, explanation:"Acrylic = monomer liquid + polymer powder. They combine in a chemical reaction (polymerization) to form the hardened nail enhancement." },
+  { id:80, module:"Master Bank", domain:"Chemistry of Nail Products", tricky:true,
+    q:"A client reports a burning or itching sensation while acrylic is being applied. The technician should FIRST:",
+    options:["Apply thinner coats and finish the service quickly","Add more monomer to cool the product down","Remove the product immediately and assess the skin","Instruct the client that this is normal"],
+    answer:2, explanation:"SAFETY FIRST. Burning = adverse chemical reaction = remove immediately. Never continue a service over a client's expressed discomfort." },
+  { id:81, module:"Master Bank", domain:"Chemistry of Nail Products", tricky:false,
+    q:"Nail polish is an example of which type of mixture?",
+    options:["Solution","Emulsion","Suspension","Compound"],
+    answer:2, explanation:"Polish is a SUSPENSION — solid pigment particles suspended in solvent. This is why you roll (not shake) the bottle — to re-mix without creating bubbles." },
+  { id:82, module:"Master Bank", domain:"Chemistry of Nail Products", tricky:true,
+    q:"The chemical in nail primer that helps acrylic adhere to the natural nail plate is:",
+    options:["Methacrylic acid","Ethyl acetate","Toluene","Formaldehyde"],
+    answer:0, explanation:"Methacrylic acid (acid-based primer) etches the nail plate for maximum adhesion. It is highly corrosive — this is why primers require extreme care during application." },
+  { id:83, module:"Master Bank", domain:"Chemistry of Nail Products", tricky:false,
+    q:"What type of light is used to cure UV gel nail products?",
+    options:["Infrared light","Ultraviolet (UV) or LED light","Blue visible light only","Halogen light"],
+    answer:1, explanation:"UV and LED lamps both work to cure gel products — they activate the photoinitiators in the gel that trigger polymerization (hardening)." },
+  { id:84, module:"Master Bank", domain:"Chemistry of Nail Products", tricky:false,
+    q:"Acetone works on nail polish by:",
+    options:["Chemically neutralizing the pigments in polish","Dissolving the polymer chains in polish through solvent action","Reacting with the base coat to lift the polish","Oxidizing the nail plate surface to release polish"],
+    answer:1, explanation:"Acetone is a powerful solvent — it dissolves the polymer network in nail polish, gel, and acrylic products through solvent action, not chemical neutralization." },
+  { id:85, module:"Master Bank", domain:"Chemistry of Nail Products", tricky:true,
+    q:"Monomer nail liquids should always be stored:",
+    options:["In the refrigerator to extend shelf life","In a cool, dark location away from heat and open flames","Near the UV lamp for convenience during application","In open containers for proper ventilation"],
+    answer:1, explanation:"Monomers are flammable and heat-sensitive. Storing near heat sources or open flames is a serious fire hazard. Always sealed, cool, and dark." },
+  { id:86, module:"Master Bank", domain:"Chemistry of Nail Products", tricky:false,
+    q:"The purpose of a nail dehydrator applied before enhancement products is to:",
+    options:["Add moisture to help products adhere","Remove surface oil and moisture to maximize adhesion","Harden the nail plate before application","Kill bacteria on the nail surface"],
+    answer:1, explanation:"Dehydrators remove surface oil and moisture — oil is the enemy of adhesion. No moisture = better bond. This is not disinfection, it is surface preparation." },
+  { id:87, module:"Master Bank", domain:"Chemistry of Nail Products", tricky:true,
+    q:"Which best describes a chemical change versus a physical change in nail products?",
+    options:["Polish drying is chemical; acrylic hardening is physical","Acrylic hardening (polymerization) is chemical; filing the nail is physical","Both acrylic hardening and filing are chemical changes","Both are physical changes since no new substance forms"],
+    answer:1, explanation:"Polymerization (acrylic hardening) creates NEW chemical bonds = chemical change. Filing only changes shape and size = physical change. Students confuse these." },
+  { id:88, module:"Master Bank", domain:"Chemistry of Nail Products", tricky:false,
+    q:"The strong odor from acrylic monomer products comes from:",
+    options:["Acetone evaporation","Methacrylic acid in primers","Evaporating monomer vapors during polymerization","The pigments in colored acrylics"],
+    answer:2, explanation:"Monomer vapors evaporate during application. Proper ventilation is essential — chronic overexposure causes sensitization and allergic reactions in technicians." },
+
+  // ── MASTER BANK: NAIL DISEASES ──
+  { id:89, module:"Master Bank", domain:"Nail Diseases & Disorders", tricky:false,
+    q:"Tinea unguium (nail ringworm) is caused by a:",
+    options:["Virus","Bacterium","Fungus","Parasite"],
+    answer:2, explanation:"Despite the name 'ringworm,' this is a FUNGAL infection (onychomycosis). No nail service should be performed. Refer to a physician." },
+  { id:90, module:"Master Bank", domain:"Nail Diseases & Disorders", tricky:true,
+    q:"Horizontal ridges across the nail plate that indicate a past illness or physical trauma are called:",
+    options:["Onychorrhexis","Beau's Lines","Koilonychia","Corrugations"],
+    answer:1, explanation:"Beau's Lines = HORIZONTAL ridges. Onychorrhexis = VERTICAL/lengthwise ridges. This is one of the most commonly missed questions — direction matters." },
+  { id:91, module:"Master Bank", domain:"Nail Diseases & Disorders", tricky:false,
+    q:"A nail technician notices green discoloration under a nail enhancement. This MOST likely indicates:",
+    options:["A reaction to the acrylic monomer","Bacterial infection (pseudomonas)","A fungal infection","The client's natural nail pigment"],
+    answer:1, explanation:"Green nails = pseudomonas bacteria growing under a lifting enhancement. This is NOT fungus. Bacteria thrive in the moist space created by lifting. Remove the enhancement and refer if severe." },
+  { id:92, module:"Master Bank", domain:"Nail Diseases & Disorders", tricky:true,
+    q:"Which of the following nail conditions CAN receive a nail service?",
+    options:["Onychomycosis (fungal infection)","Paronychia (bacterial infection around the nail)","Onychorrhexis (brittle nails with ridges)","Severe onychia (nail inflammation)"],
+    answer:2, explanation:"This tests knowing what you CAN service vs. must refuse. Onychorrhexis is a non-contagious nail condition — you can safely service it. All infections require refusal." },
+  { id:93, module:"Master Bank", domain:"Nail Diseases & Disorders", tricky:false,
+    q:"Koilonychia is a nail condition characterized by:",
+    options:["Nails curving upward with a concave, spoon-like shape","Thickening and yellowing of the nail plate","Detachment of the nail from the nail bed","White horizontal lines across the nail plate"],
+    answer:0, explanation:"Koilonychia = spoon nails. The nail plate curves upward at the edges forming a concave shape. Often associated with iron deficiency anemia." },
+  { id:94, module:"Master Bank", domain:"Nail Diseases & Disorders", tricky:true,
+    q:"A client has inflamed, red, swollen skin around the nail fold with visible pus. The technician should:",
+    options:["Lance the infection and apply antiseptic before proceeding","Apply cuticle remover to soften the area and work carefully","Refuse service and advise the client to seek medical attention","Cover with a bandage and proceed with the service"],
+    answer:2, explanation:"Paronychia (nail fold infection with pus) is a bacterial infection requiring medical treatment. Nail techs never lance, treat, or work through infections." },
+
+  // ── MODULE 4: TOOLS, PREP, CONSULT ──
+  { id:95, module:"Module 4", domain:"Nail Service Tools", tricky:false,
+    q:"A cuticle pusher is also known as a:",
+    options:["Curette","Nipper","Orangewood stick","Steel pusher"],
+    answer:3, explanation:"Cuticle pushers are called steel pushers when made of metal. Orangewood sticks also push cuticles but are single-use wooden implements — a different tool entirely." },
+  { id:96, module:"Module 4", domain:"Nail Service Tools", tricky:false,
+    q:"Which implement is used to clean debris from under the free edge of the nail?",
+    options:["Cuticle nipper","Nail rasp","Orangewood stick","Metal file"],
+    answer:2, explanation:"An orangewood stick is used to gently clean under the free edge. Its wooden, single-use nature makes it safe and hygienic for this delicate area." },
+  { id:97, module:"Module 4", domain:"Nail Service Tools", tricky:true,
+    q:"Nail nippers should ONLY be used to:",
+    options:["Shape the nail plate along the free edge","Trim hangnails and loose, dead cuticle tissue only","Remove all excess cuticle from the nail plate","Cut any skin surrounding the nail that appears overgrown"],
+    answer:1, explanation:"Nippers remove only dead, loose hangnail or cuticle tissue — not live skin. Cutting live skin causes injury, bleeding, and infection risk. This is a scope-of-practice and safety answer." },
+  { id:98, module:"Module 4", domain:"Nail Service Tools", tricky:false,
+    q:"Which of the following nail files has the COARSEST grit?",
+    options:["240 grit","180 grit","100 grit","80 grit"],
+    answer:3, explanation:"Lower grit number = coarser abrasive. 80 grit is used for heavy shaping of enhancements. 240 grit is ultra-fine for buffing natural nails to a shine. Know the scale direction." },
+  { id:99, module:"Module 4", domain:"Nail Service Tools", tricky:true,
+    q:"An electric file (e-file) used during nail services should be operated at:",
+    options:["Maximum speed for efficiency","The lowest speed that accomplishes the task safely","Medium speed only, regardless of the service","High speed for enhancements, low speed for natural nails"],
+    answer:1, explanation:"The NIC answer is always the safest option — lowest effective speed. High-speed e-file use on natural nails causes heat damage and overthinning. Safety over efficiency." },
+  { id:100, module:"Module 4", domain:"Nail Service Tools", tricky:false,
+    q:"A chamois buffer is used on natural nails to:",
+    options:["Remove surface ridges with an abrasive action","Create shine through friction without an abrasive","Apply cuticle oil evenly across the nail surface","Buff enhancement products to a high gloss"],
+    answer:1, explanation:"A chamois buffer creates shine through gentle friction — not abrasion. It smooths the nail surface and generates a natural high gloss. No grit, just soft buffing." },
+  { id:101, module:"Module 4", domain:"Nail Service Tools", tricky:true,
+    q:"After using metal implements on a client, the CORRECT next step before using them on another client is:",
+    options:["Rinse with hot water and dry thoroughly","Wipe with an alcohol pad","Clean to remove debris, then fully disinfect in an EPA-registered disinfectant solution","Place in a UV sterilizer cabinet"],
+    answer:2, explanation:"Two steps — clean THEN disinfect. Skipping the cleaning step means organic debris protects pathogens from the disinfectant. UV cabinets are storage tools, not sterilizers for salon use." },
+  { id:102, module:"Module 4", domain:"Nail Service Tools", tricky:false,
+    q:"Pumice stone is used during pedicure services as:",
+    options:["A disinfectant for the foot basin","An abrasive to reduce calluses and smooth rough skin","A softening agent for dry cuticles","A lubricant for easier nail filing"],
+    answer:1, explanation:"Pumice is a porous volcanic rock used as a mechanical exfoliant — it physically abrades and reduces callus tissue. It is not a chemical treatment." },
+  { id:103, module:"Module 4", domain:"Nail Service Tools", tricky:false,
+    q:"Which of the following is a SINGLE-USE item that must be discarded after each client?",
+    options:["Metal cuticle pusher","Glass nail file","Wooden orangewood stick","Steel nail nipper"],
+    answer:2, explanation:"Orangewood sticks are porous and cannot be properly disinfected — single-use only. Metal and glass implements can be cleaned and disinfected for reuse." },
+  { id:104, module:"Module 4", domain:"Nail Service Preparation", tricky:false,
+    q:"Before beginning any nail service, the technician MUST:",
+    options:["Apply hand lotion to both technician and client hands","Wash their own hands and have the client wash theirs","Put on gloves before touching any implements","Set up the manicure table with implements soaking in disinfectant"],
+    answer:1, explanation:"Hand washing by BOTH technician and client is the mandatory first step before any service begins. It is the foundation of infection control in the salon." },
+  { id:105, module:"Module 4", domain:"Nail Service Preparation", tricky:true,
+    q:"The manicure table should be set up so that:",
+    options:["All implements are pre-soaked in disinfectant and ready to use directly from the solution","Single-use items are laid out and multi-use implements have been cleaned and disinfected prior to the service","Products are lined up on the client's side for easy access","Implements are stored in alcohol until the client sits down"],
+    answer:1, explanation:"Implements must be cleaned and disinfected BEFORE the service — not during. Pre-soaking in disinfectant during setup is not the same as following the full clean-then-disinfect protocol." },
+  { id:106, module:"Module 4", domain:"Nail Service Preparation", tricky:false,
+    q:"All professional nail products should be stored when not in use in:",
+    options:["The manicure table drawer for quick access","Open containers to allow fumes to dissipate safely","Clean, closed, labeled containers away from heat and direct sunlight","The refrigerator to extend shelf life"],
+    answer:2, explanation:"Closed, labeled containers protect products from contamination, evaporation, and chemical degradation. Heat and sunlight break down many nail chemistry products." },
+  { id:107, module:"Module 4", domain:"Nail Service Preparation", tricky:true,
+    q:"When dispensing nail products from a professional container for client use, the technician should:",
+    options:["Pour directly from the manufacturer bottle to avoid cross-contamination","Use a clean spatula or pump to remove product — never double-dip into the original container","Allow the client to self-apply from the professional container","Dip a clean brush directly into the product jar"],
+    answer:1, explanation:"Double-dipping (returning a used applicator to the original container) contaminates the entire product supply. Always dispense with a clean spatula or single-use tool." },
+  { id:108, module:"Module 4", domain:"Client Consultation", tricky:false,
+    q:"The PRIMARY purpose of a client consultation before a nail service is to:",
+    options:["Determine what nail shape the client prefers","Identify contraindications, allergies, and service goals to ensure safety and appropriate service selection","Upsell add-on services and products","Complete the required paperwork for state records"],
+    answer:1, explanation:"Consultation is a safety tool first. Identifying contraindications, skin conditions, allergies, and medications protects both client and technician and drives the right service decision." },
+  { id:109, module:"Module 4", domain:"Client Consultation", tricky:true,
+    q:"A client intake form should include which of the following?",
+    options:["Client's social security number for billing records","Allergies, medical conditions, medications, and previous reactions to nail products","Client's employment history to understand hand-use patterns","The technician's service menu and pricing"],
+    answer:1, explanation:"Allergy and medical history is the core of a proper intake form — not billing info or technician details. Knowing medications matters because some (like blood thinners) affect how you service the client." },
+  { id:110, module:"Module 4", domain:"Client Consultation", tricky:false,
+    q:"During the consultation, a client mentions she is taking blood thinners. The technician should:",
+    options:["Refuse all services as a precaution","Proceed normally — medication history is not relevant to nail services","Be extra cautious during cuticle work to avoid any cuts or nicks that could cause excessive bleeding","Apply a numbing cream before cuticle work"],
+    answer:2, explanation:"Blood thinners mean cuts bleed more and clot more slowly. The service is not refused — the technician adjusts technique to be especially gentle during cuticle work." },
+  { id:111, module:"Module 4", domain:"Client Consultation", tricky:true,
+    q:"A client requests a service that the technician believes is not appropriate for the client's current nail condition. The technician should:",
+    options:["Perform the service as requested — the client has the right to choose","Refuse the service without explanation to avoid conflict","Explain the concern professionally, recommend an appropriate alternative, and document the conversation","Perform a modified version without telling the client"],
+    answer:2, explanation:"The NIC values informed consent and professional communication. You explain, recommend, and document — you do not silently modify or refuse without explanation. Client education is part of the service." },
+  { id:112, module:"Module 4", domain:"Client Consultation", tricky:false,
+    q:"Contraindications are conditions that:",
+    options:["Indicate which nail shape will work best for a client","Prevent or limit a service from being safely performed","Require the technician to use more product than normal","Show that a client needs a more advanced nail service"],
+    answer:1, explanation:"Contraindications are STOP signs — conditions (infections, open wounds, certain medical conditions) that mean a service should be modified or not performed at all." },
+  { id:113, module:"Module 4", domain:"Post-Service Procedures", tricky:false,
+    q:"After a nail service is complete, used single-use items must be:",
+    options:["Placed in a covered waste container immediately","Rinsed and set aside for the next client","Disinfected and stored for future use","Left on the manicure table until end of day cleanup"],
+    answer:0, explanation:"Single-use items go directly into a covered waste container. Immediately. No exceptions. Leaving them on the table is a contamination hazard and a state board violation." },
+  { id:114, module:"Module 4", domain:"Post-Service Procedures", tricky:true,
+    q:"After a service, multi-use metal implements must be processed in which order?",
+    options:["Disinfect → Clean → Store","Rinse → Store → Disinfect before next use","Clean (remove debris) → Disinfect in EPA-registered solution → Store in clean, closed container","Sterilize → Disinfect → Store"],
+    answer:2, explanation:"The order is always Clean FIRST, then Disinfect, then Store. Disinfecting before cleaning is ineffective — organic matter protects pathogens. Sterilization is not required for nail implements in salon settings." },
+  { id:115, module:"Module 4", domain:"Post-Service Procedures", tricky:false,
+    q:"After completing a service, the technician should recommend home care products to the client primarily to:",
+    options:["Increase retail sales revenue","Extend the life of the service and maintain nail and skin health between appointments","Replace professional services the client cannot afford","Fulfill a state board requirement for service completion"],
+    answer:1, explanation:"Home care recommendations are a professional responsibility — they extend service results and keep the client's nails and skin healthy." },
+  { id:116, module:"Module 4", domain:"Post-Service Procedures", tricky:true,
+    q:"The manicure table and workstation must be disinfected after each client because:",
+    options:["State inspectors may arrive unannounced at any time","The table surface is considered contaminated after contact with a client and must be made safe for the next person","It prevents nail product buildup on the surface","It makes the salon look more professional"],
+    answer:1, explanation:"The reason is always infection control and client safety — not aesthetics, inspections, or product buildup. The NIC will always prefer the safety-rationale answer over a practical one." },
+  { id:117, module:"Module 4", domain:"High-Yield: Frequently Missed", tricky:true,
+    q:"Which of the following BEST describes the difference between cleaning and disinfecting?",
+    options:["They are the same process using different products","Cleaning removes visible debris; disinfecting destroys pathogens on a pre-cleaned surface","Disinfecting removes debris; cleaning destroys bacteria","They should be done simultaneously for efficiency"],
+    answer:1, explanation:"Critical distinction: clean first (remove debris), then disinfect (kill pathogens). Disinfectant cannot penetrate organic matter — so cleaning is never optional or interchangeable with disinfecting." },
+  { id:118, module:"Module 4", domain:"High-Yield: Frequently Missed", tricky:true,
+    q:"The term 'standard precautions' means the technician should treat:",
+    options:["Only visibly infected clients with extra care","All blood and body fluids from every client as potentially infectious","Clients who disclose medical conditions with special protocols","Clients with known infections with hospital-grade disinfection"],
+    answer:1, explanation:"Standard precautions = treat ALL clients as potentially infectious, regardless of appearance or disclosure. This is the cornerstone of bloodborne pathogen protection. You never know — so you always protect." },
+  { id:119, module:"Module 4", domain:"High-Yield: Frequently Missed", tricky:true,
+    q:"A product's Safety Data Sheet (SDS) would be consulted MOST urgently when:",
+    options:["A client asks about the ingredients in a product","A product spills on the technician's skin or in the eyes","The technician wants to compare product prices","A client has a known nut allergy"],
+    answer:1, explanation:"SDS sheets are emergency documents — they contain first aid procedures, hazard information, and emergency contact info. A chemical exposure or spill is when you grab the SDS immediately." },
+  { id:120, module:"Module 4", domain:"High-Yield: Frequently Missed", tricky:false,
+    q:"The nerve that supplies impulses to the top of the foot is the:",
+    options:["Tibial nerve","Dorsal nerve","Plantar nerve","Peroneal nerve"],
+    answer:1, explanation:"The dorsal nerve supplies the top (dorsal surface) of the foot. Dorsal = top/back surface." },
+  { id:121, module:"Module 4", domain:"High-Yield: Frequently Missed", tricky:false,
+    q:"The muscles responsible for producing goosebumps on the skin are called:",
+    options:["Flexor muscles","Arrector pili","Extensor muscles","Orbicularis muscles"],
+    answer:1, explanation:"Arrector pili are tiny muscles attached to hair follicles. When they contract, they cause the hair to stand up and create the raised skin we call goosebumps." },
+  { id:122, module:"Module 4", domain:"High-Yield: Frequently Missed", tricky:true,
+    q:"The study of the growth and structure of nails is known as:",
+    options:["Dermatology","Trichology","Onyxology","Cosmetology"],
+    answer:2, explanation:"Onyxology = study of nails. Trichology = study of hair. Dermatology = study of skin." },
+  { id:123, module:"Module 4", domain:"High-Yield: Frequently Missed", tricky:true,
+    q:"A client's nails are yellowish, have lost their normal luster, and the skin around them is inflamed. The technician should FIRST:",
+    options:["Apply brightening nail treatment and antifungal top coat","Perform the service with gloves on for protection","Conduct a thorough consultation and decline service","File and buff the nails to restore luster"],
+    answer:2, explanation:"Yellow + lost luster + inflamed skin = possible infection. The safety-first rule: when presentation suggests infection or pathology, decline and refer. Never treat, buff over, or work around suspected infection." },
+];
+
+// ══════════════════════════════════════════════════
+//  APP STATE
+// ══════════════════════════════════════════════════
+const MODULES = [
+  { id:"Module 2", label:"Module 2", title:"Nail Enhancements", sub:"20% of Exam · 30 questions" },
+  { id:"Module 3", label:"Module 3", title:"Manicure & Pedicure", sub:"18% of Exam · 27 questions" },
+  { id:"Master Bank", label:"Master Bank", title:"Infection Control, A&P, Chemistry, Diseases", sub:"4 domains · 37 questions" },
+  { id:"Module 4", label:"Module 4", title:"Tools, Prep, Consultation & Post-Service", sub:"22% of Exam · 29 questions" },
+];
+
+let selectedModules = new Set(MODULES.map(m => m.id));
+let selectedModes = new Set(["flashcard","multiple"]);
+let filterTrichy = false;
+let quizQuestions = [];
+let currentIndex = 0;
+let currentMode = "flashcard";
+let score = 0;
+let missedIds = [];
+let cardFlipped = false;
+let answered = false;
+let currentStudent = null;
+let sessionStartModules = [];
+let sessionStartFilter = false;
+
+// ══════════════════════════════════════════════════
+//  STORAGE HELPERS
+// ══════════════════════════════════════════════════
+function storageKey(student) {
+  return 'sessions:' + student.toLowerCase().replace(/[^a-z0-9]/g, '_');
+}
+
+async function loadSessions(student) {
+  try {
+    const result = await window.storage.get(storageKey(student));
+    return result ? JSON.parse(result.value) : [];
+  } catch(e) { return []; }
+}
+
+async function saveSessions(student, sessions) {
+  try {
+    await window.storage.set(storageKey(student), JSON.stringify(sessions));
+  } catch(e) { console.warn('Storage save failed', e); }
+}
+
+async function saveSession(student, sessionData) {
+  const sessions = await loadSessions(student);
+  sessions.unshift(sessionData); // newest first
+  await saveSessions(student, sessions);
+}
+
+async function loadRecentStudents() {
+  try {
+    const result = await window.storage.list('sessions:');
+    return result ? result.keys.map(k => k.replace('sessions:','').replace(/_/g,' ')) : [];
+  } catch(e) { return []; }
+}
+
+// ══════════════════════════════════════════════════
+//  LOGIN
+// ══════════════════════════════════════════════════
+async function loginStudent() {
+  const input = document.getElementById('studentNameInput');
+  const name = input.value.trim();
+  if (!name) { input.style.borderColor = 'var(--rose)'; return; }
+  currentStudent = name;
+  showScreen('home');
+  document.getElementById('homeWelcome').textContent = `Studying as: ${name}`;
+  initHome();
+}
+
+async function showLoginScreen() {
+  showScreen('login');
+  // Show recent students
+  const recent = await loadRecentStudents();
+  const el = document.getElementById('recentStudents');
+  if (recent.length > 0) {
+    // Capitalize properly
+    const names = recent.slice(0,5).map(n => n.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '));
+    el.innerHTML = `
+      <div style="font-size:0.78rem;color:var(--muted);margin-bottom:10px;">Recent students — click to continue:</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;">
+        ${names.map(n => `<button onclick="quickLogin('${n}')" style="padding:7px 16px;border-radius:20px;border:1.5px solid var(--border);background:white;font-family:'Montserrat',sans-serif;font-size:0.82rem;cursor:pointer;color:var(--ink);transition:all 0.2s;" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--border)'">${n}</button>`).join('')}
+      </div>`;
+  }
+}
+
+function quickLogin(name) {
+  document.getElementById('studentNameInput').value = name;
+  loginStudent();
+}
+
+// ══════════════════════════════════════════════════
+//  INIT HOME
+// ══════════════════════════════════════════════════
+function initHome() {
+  const grid = document.getElementById("moduleGrid");
+  grid.innerHTML = MODULES.map(m => `
+    <div class="module-card selected" data-module="${m.id}" onclick="toggleModule('${m.id}', this)">
+      <div class="check">✓</div>
+      <div class="module-tag">${m.label}</div>
+      <h3>${m.title}</h3>
+      <p>${m.sub}</p>
+    </div>
+  `).join("");
+
+  document.querySelectorAll('[data-mode]').forEach(btn => {
+    btn.addEventListener('click', () => toggleMode(btn.dataset.mode, btn));
+  });
+  document.querySelectorAll('[data-filter]').forEach(btn => {
+    btn.addEventListener('click', () => setFilter(btn.dataset.filter, btn));
+  });
+}
+
+function toggleModule(id, el) {
+  if (selectedModules.has(id)) {
+    if (selectedModules.size === 1) return;
+    selectedModules.delete(id);
+    el.classList.remove("selected");
+    el.querySelector(".check").textContent = "";
+  } else {
+    selectedModules.add(id);
+    el.classList.add("selected");
+    el.querySelector(".check").textContent = "✓";
+  }
+}
+
+function toggleMode(mode, btn) {
+  if (selectedModes.has(mode)) {
+    if (selectedModes.size === 1) return;
+    selectedModes.delete(mode);
+    btn.classList.remove("active");
+  } else {
+    selectedModes.add(mode);
+    btn.classList.add("active");
+  }
+}
+
+function setFilter(filter, btn) {
+  document.querySelectorAll('[data-filter]').forEach(b => b.classList.remove("active"));
+  btn.classList.add("active");
+  filterTrichy = filter === "tricky";
+}
+
+// ══════════════════════════════════════════════════
+//  QUIZ LOGIC
+// ══════════════════════════════════════════════════
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz(questions) {
+  let pool = questions || ALL_QUESTIONS.filter(q =>
+    selectedModules.has(q.module) && (!filterTrichy || q.tricky)
+  );
+  if (pool.length === 0) { alert("No questions match your selection!"); return; }
+  quizQuestions = shuffle(pool);
+  currentIndex = 0;
+  score = 0;
+  missedIds = [];
+  sessionStartModules = [...selectedModules];
+  sessionStartFilter = filterTrichy;
+
+  // Alternate modes or pick one
+  const modes = [...selectedModes];
+  currentMode = modes[Math.floor(Math.random() * modes.length)];
+
+  showScreen("quiz");
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = quizQuestions[currentIndex];
+  const total = quizQuestions.length;
+  const pct = Math.round((currentIndex / total) * 100);
+
+  document.getElementById("progressLabel").textContent = `Question ${currentIndex + 1} of ${total}`;
+  document.getElementById("scoreLabel").textContent = `${score} correct`;
+  document.getElementById("progressFill").style.width = pct + "%";
+
+  // Alternate modes if both selected
+  if (selectedModes.size === 2) {
+    currentMode = currentIndex % 2 === 0 ? "flashcard" : "multiple";
+  } else {
+    currentMode = [...selectedModes][0];
+  }
+  document.getElementById("modePill").textContent = currentMode === "flashcard" ? "✦ Flashcard" : "⊞ Multiple Choice";
+
+  const area = document.getElementById("questionArea");
+  if (currentMode === "flashcard") {
+    renderFlashcard(q, area);
+  } else {
+    renderMC(q, area);
+  }
+}
+
+function renderFlashcard(q, area) {
+  cardFlipped = false;
+  const letters = ["A","B","C","D"];
+  area.innerHTML = `
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="fc" onclick="flipCard()">
+        <div class="card-face card-front">
+          ${q.tricky ? '<div class="tricky-badge">⚠ TRICKY</div>' : ''}
+          <div class="card-label">${q.domain}</div>
+          <div class="card-question">${q.q}</div>
+          <div style="color:var(--muted);font-size:0.82rem;margin-top:12px;">
+            ${q.options.map((o,i) => `<span style="display:block;margin-bottom:4px;">${letters[i]}. ${o}</span>`).join('')}
+          </div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-label">${q.module} · ${q.domain}</div>
+          <div class="card-back" style="position:static;background:none;padding:0;transform:none;min-height:auto;">
+            <div class="card-answer">Answer: ${letters[q.answer]} — ${q.options[q.answer]}</div>
+            <div class="card-explanation">${q.explanation}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flip-hint"><span class="icon">↩</span> Click card to reveal answer</div>
+    <div class="fc-nav" id="fcNav" style="display:none;margin-top:20px;">
+      <button class="nav-btn" onclick="markMissed()">✗ Missed it</button>
+      <button class="nav-btn primary" onclick="markCorrect()">✓ Got it</button>
+    </div>
+  `;
+}
+
+function flipCard() {
+  const fc = document.getElementById("fc");
+  if (!fc) return;
+  cardFlipped = !cardFlipped;
+  fc.classList.toggle("flipped", cardFlipped);
+  if (cardFlipped) {
+    document.querySelector(".flip-hint").style.display = "none";
+    document.getElementById("fcNav").style.display = "flex";
+  }
+}
+
+function markCorrect() {
+  score++;
+  document.getElementById("scoreLabel").textContent = `${score} correct`;
+  nextQuestion();
+}
+
+function markMissed() {
+  missedIds.push(quizQuestions[currentIndex].id);
+  nextQuestion();
+}
+
+function renderMC(q, area) {
+  answered = false;
+  const letters = ["A","B","C","D"];
+  area.innerHTML = `
+    <div class="mc-card">
+      ${q.tricky ? '<div class="tricky-badge" style="margin-bottom:14px;">⚠ TRICKY</div>' : ''}
+      <div class="mc-q">${q.q}</div>
+      <ul class="options-list">
+        ${q.options.map((opt, i) => `
+          <li>
+            <button class="option-btn" id="opt${i}" onclick="selectAnswer(${i})">
+              <span class="option-letter">${letters[i]}</span>
+              <span>${opt}</span>
+            </button>
+          </li>
+        `).join("")}
+      </ul>
+    </div>
+    <div id="expBox"></div>
+    <div class="fc-nav" id="mcNext" style="display:none;">
+      <button class="nav-btn primary" onclick="nextQuestion()">Next →</button>
+    </div>
+  `;
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = quizQuestions[currentIndex];
+  const correct = q.answer;
+  const letters = ["A","B","C","D"];
+
+  for (let i = 0; i < q.options.length; i++) {
+    const btn = document.getElementById("opt" + i);
+    btn.disabled = true;
+    if (i === correct) btn.classList.add("correct");
+    else if (i === idx && i !== correct) btn.classList.add("wrong");
+  }
+
+  const isRight = idx === correct;
+  if (isRight) score++;
+  else missedIds.push(q.id);
+
+  document.getElementById("scoreLabel").textContent = `${score} correct`;
+
+  document.getElementById("expBox").innerHTML = `
+    <div class="explanation-box">
+      <div class="exp-label">Explanation</div>
+      <div class="exp-result ${isRight ? 'right' : 'wrong'}">
+        ${isRight ? '✓ Correct!' : `✗ Incorrect — Correct answer: ${letters[correct]}. ${q.options[correct]}`}
+      </div>
+      <div>${q.explanation}</div>
+    </div>
+  `;
+
+  document.getElementById("mcNext").style.display = "flex";
+}
+
+function nextQuestion() {
+  currentIndex++;
+  if (currentIndex >= quizQuestions.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+async function showResults() {
+  showScreen("results");
+  const total = quizQuestions.length;
+  const pct = Math.round((score / total) * 100);
+  const tricky = quizQuestions.filter(q => q.tricky).length;
+  const trickyCorrect = quizQuestions.filter(q => q.tricky && !missedIds.includes(q.id)).length;
+
+  document.getElementById("scorePct").textContent = pct + "%";
+  const title = pct >= 85 ? "Excellent work!" : pct >= 70 ? "Good progress!" : "Keep studying!";
+  document.getElementById("resultTitle").textContent = title;
+  document.getElementById("resultSub").textContent = `You answered ${score} out of ${total} questions correctly.`;
+  document.getElementById("statCorrect").textContent = `✓ ${score} correct`;
+  document.getElementById("statWrong").textContent = `✗ ${total - score} missed`;
+  document.getElementById("statTricy").textContent = `⚠ ${trickyCorrect}/${tricky} tricky correct`;
+
+  const circumference = 439.82;
+  const offset = circumference - (pct / 100) * circumference;
+  setTimeout(() => {
+    document.getElementById("ringFill").style.strokeDashoffset = offset;
+  }, 200);
+
+  // Save session to storage
+  if (currentStudent) {
+    const sessionData = {
+      date: new Date().toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }),
+      time: new Date().toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' }),
+      score, total, pct,
+      modules: sessionStartModules,
+      trickyOnly: sessionStartFilter,
+      trickyCorrect, tricky
+    };
+    await saveSession(currentStudent, sessionData);
+  }
+}
+
+async function showHistoryScreen() {
+  if (!currentStudent) return;
+  showScreen('history');
+  document.getElementById('historyTitle').textContent = currentStudent + "'s Progress";
+  const sessions = await loadSessions(currentStudent);
+  const el = document.getElementById('historyContent');
+
+  if (sessions.length === 0) {
+    el.innerHTML = `<div style="text-align:center;padding:48px;color:var(--muted);">No sessions yet — complete a quiz to see your history here.</div>`;
+    return;
+  }
+
+  // Summary stats
+  const avgPct = Math.round(sessions.reduce((a,s) => a + s.pct, 0) / sessions.length);
+  const best = Math.max(...sessions.map(s => s.pct));
+  const totalSessions = sessions.length;
+
+  el.innerHTML = `
+    <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:120px;background:var(--warm-white);border:1.5px solid var(--border);border-radius:12px;padding:18px;text-align:center;">
+        <div style="font-family:'Cormorant SC',serif;font-size:2rem;color:var(--gold);font-weight:700;">${totalSessions}</div>
+        <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;">Sessions</div>
+      </div>
+      <div style="flex:1;min-width:120px;background:var(--warm-white);border:1.5px solid var(--border);border-radius:12px;padding:18px;text-align:center;">
+        <div style="font-family:'Cormorant SC',serif;font-size:2rem;color:var(--gold);font-weight:700;">${avgPct}%</div>
+        <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;">Avg Score</div>
+      </div>
+      <div style="flex:1;min-width:120px;background:var(--warm-white);border:1.5px solid var(--border);border-radius:12px;padding:18px;text-align:center;">
+        <div style="font-family:'Cormorant SC',serif;font-size:2rem;color:var(--gold);font-weight:700;">${best}%</div>
+        <div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;">Best Score</div>
+      </div>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">All Sessions</div>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+      ${sessions.map((s, i) => {
+        const barWidth = s.pct;
+        const barColor = s.pct >= 85 ? 'var(--sage)' : s.pct >= 70 ? 'var(--gold)' : 'var(--rose)';
+        const badge = s.pct >= 85 ? '✦' : s.pct >= 70 ? '◈' : '○';
+        return `
+          <div style="background:var(--warm-white);border:1.5px solid var(--border);border-radius:12px;padding:18px 20px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span style="font-size:1rem;color:${barColor};">${badge}</span>
+                <span style="font-weight:600;font-size:0.95rem;">${s.score}/${s.total} correct</span>
+                <span style="font-family:'DM Mono',monospace;font-size:0.72rem;color:var(--gold);background:var(--gold-pale);padding:3px 9px;border-radius:20px;">${s.pct}%</span>
+                ${s.trickyOnly ? '<span style="font-family:\'DM Mono\',monospace;font-size:0.68rem;color:var(--muted);border:1px solid var(--border);padding:2px 8px;border-radius:20px;">Tricky Only</span>' : ''}
+              </div>
+              <div style="font-size:0.78rem;color:var(--muted);">${s.date} · ${s.time}</div>
+            </div>
+            <div style="height:5px;background:var(--border);border-radius:10px;overflow:hidden;">
+              <div style="height:100%;width:${barWidth}%;background:${barColor};border-radius:10px;transition:width 0.6s ease;"></div>
+            </div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:8px;">${s.modules ? s.modules.join(', ') : 'All Modules'}${s.tricky > 0 ? ` · ⚠ ${s.trickyCorrect}/${s.tricky} tricky` : ''}</div>
+          </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function retryMissed() {
+  const missed = ALL_QUESTIONS.filter(q => missedIds.includes(q.id));
+  if (missed.length === 0) { alert("No missed questions!"); return; }
+  startQuiz(missed);
+}
+
+function restartSame() {
+  startQuiz();
+}
+
+function goHome() {
+  showScreen("home");
+}
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0, 0);
+}
+
+showLoginScreen();
+</script>
+</body>
+</html>
